@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using UnityEngine;
 
 /// <summary>
@@ -40,6 +41,11 @@ public class Hud : ScreenManager, IAutograderHud
     /// In the autograder, when the current time is this fraction of the time limit away from the time limit, the current time is shown as a warning color.
     /// </summary>
     private const float autograderWarningTimeRatio = 0.25f;
+
+    /// <summary>
+    /// During the simulation, when the battery charge is below this fraction, the current  battery percentage is shown as a warning color.
+    /// </summary>
+    private const float batteryWarningRatio = 0.20f;
 
     /// <summary>
     /// The background color of the mode label when the simulation is in each SimulationMode.
@@ -206,7 +212,29 @@ public class Hud : ScreenManager, IAutograderHud
         this.texts[(int)Texts.LinearAcceleration].text = FormatVector3(linearAcceleration);
         this.texts[(int)Texts.AngularVelocity].text = FormatVector3(angularVelocity);
     }
+
+    public void UpdateBattery(float charge)
+    {
+        if(Settings.Battery)
+        {
+            this.texts[(int)Texts.Battery].text = $"Battery: {charge:F1}%";
+        }
+        else
+        {
+            this.texts[(int)Texts.Battery].text = string.Empty;
+        }
+
+        if (charge / 100f < Hud.batteryWarningRatio)
+        {
+            this.texts[(int)Texts.Battery].color = Color.red;
+        }
+        else
+        {
+            this.texts[(int)Texts.Battery].color = Color.white;
+        }
+    }
     #endregion
+
 
     /// <summary>
     /// The mutable text fields of the HUD, with values corresponding to the index in texts.
@@ -218,16 +246,17 @@ public class Hud : ScreenManager, IAutograderHud
         CheckpointTimes = 2,
         TimeScale = 3,
         TrueSpeed = 8,
-        LinearAcceleration = 12,
-        AngularVelocity = 15,
-        Mode = 17,
-        Failure = 19,
-        SuccessMessage = 21,
-        SuccessTime = 22,
-        AutograderTitle = 25,
-        AutograderDescription = 26,
-        AutograderScore = 27,
-        MaxTime = 28
+        Battery = 10,
+        LinearAcceleration = 13,
+        AngularVelocity = 16,
+        Mode = 18,
+        Failure = 20,
+        SuccessMessage = 22,
+        SuccessTime = 23,
+        AutograderTitle = 26,
+        AutograderDescription = 27,
+        AutograderScore = 28,
+        MaxTime = 29
     }
 
     /// <summary>

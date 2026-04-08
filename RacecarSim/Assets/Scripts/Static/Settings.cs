@@ -24,6 +24,11 @@ public static class Settings
     public const string DefaultUsername = "Default";
 
     /// <summary>
+    /// The default value of Battery.
+    /// </summary>
+    private const bool defaultBattery = false;
+
+    /// <summary>
     /// The default fixed delta time (in seconds) chosen by Unity.
     /// </summary>
     public static readonly float DefaultFixedDeltaTime = Time.fixedDeltaTime;
@@ -60,6 +65,8 @@ public static class Settings
     /// </summary>
     public static bool HideCarsInColorCamera;
 
+    public static bool Battery;
+
     /// <summary>
     /// If true, controller input is still sent in evaluation mode but best times are not recorded.
     /// </summary>
@@ -95,6 +102,7 @@ public static class Settings
         Settings.HideCarsInColorCamera = Settings.defaultHideCarsInColorCamera;
         Settings.DepthRes = Settings.defaultDepthRes;
         Settings.Username = Settings.DefaultUsername;
+        Settings.Battery = Settings.defaultBattery;
     }
 
     /// <summary>
@@ -104,6 +112,7 @@ public static class Settings
     {
         PlayerPrefs.SetInt("IsRealism", System.Convert.ToInt32(Settings.IsRealism));
         PlayerPrefs.SetInt("HideCarsInColorCamera", System.Convert.ToInt32(Settings.HideCarsInColorCamera));
+        PlayerPrefs.SetInt("Battery", System.Convert.ToInt32(Settings.Battery));
         PlayerPrefs.SetInt("DepthRes", (int)Settings.DepthRes);
         PlayerPrefs.SetString("Username", Settings.Username);
     }
@@ -123,5 +132,6 @@ public static class Settings
         Settings.HideCarsInColorCamera = System.Convert.ToBoolean(PlayerPrefs.GetInt("HideCarsInColorCamera", System.Convert.ToInt32(Settings.defaultHideCarsInColorCamera)));
         Settings.DepthRes = (DepthResolution)PlayerPrefs.GetInt("DepthRes", (int)Settings.defaultDepthRes);
         Settings.Username = PlayerPrefs.GetString("Username", Settings.DefaultUsername);
+        Settings.Battery = System.Convert.ToBoolean(PlayerPrefs.GetInt("Battery", System.Convert.ToInt32(Settings.defaultBattery)));
     }
 }

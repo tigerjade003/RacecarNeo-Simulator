@@ -24,7 +24,9 @@ public class SettingsUI : MonoBehaviour
     {
         Settings.IsRealism = this.toggles[(int)Toggles.IsRealism].isOn;
         Settings.HideCarsInColorCamera = this.toggles[(int)Toggles.HideCarsInColorCamera].isOn;
+        Settings.Battery = this.toggles[(int)Toggles.Battery].isOn;
         Settings.DepthRes = (Settings.DepthResolution)this.dropdowns[(int)Dropdowns.DepthRes].value;
+
         Settings.Username = this.username.text;
         
         this.ApplyColorInputs();
@@ -63,7 +65,8 @@ public class SettingsUI : MonoBehaviour
     {
         IsRealism = 0,
         HideCarsInColorCamera = 1,
-        FirstShiny = 2,
+        FirstShiny = 3,
+        Battery = 2,
     }
 
     /// <summary>
@@ -94,6 +97,7 @@ public class SettingsUI : MonoBehaviour
         this.username = this.GetComponentInChildren<InputField>();
     }
 
+
     private void Start()
     {
         this.UpdateInputs();
@@ -106,6 +110,7 @@ public class SettingsUI : MonoBehaviour
     {
         this.toggles[(int)Toggles.IsRealism].isOn = Settings.IsRealism;
         this.toggles[(int)Toggles.HideCarsInColorCamera].isOn = Settings.HideCarsInColorCamera;
+        this.toggles[(int)Toggles.Battery].isOn = Settings.Battery;
         this.dropdowns[(int)Dropdowns.DepthRes].value = (int)Settings.DepthRes;
         this.username.text = Settings.Username;
 

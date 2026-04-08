@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -94,6 +95,7 @@ public class LevelManager : MonoBehaviour
     /// </summary>
     public static int NumPlayers = 1;
 
+    public Drive Drive;
     /// <summary>
     /// True if the current simulation is an evaluation run.
     /// </summary>
@@ -366,6 +368,7 @@ public class LevelManager : MonoBehaviour
     /// The racecars in the current simulation.
     /// </summary>
     private Racecar[] players;
+
 
     /// <summary>
     /// The current simulation mode.
@@ -724,7 +727,6 @@ public class LevelManager : MonoBehaviour
             Hud hud = GameObject.Instantiate(this.hudPrefab).GetComponent<Hud>();
             this.players[0].GetComponentInChildren<Racecar>().Hud = hud;
             this.screenManager = hud;
-
             if (LevelManager.LevelManagerMode == LevelManagerMode.Autograder && AutograderManager.LevelInfo.DefaultCameraIndex != 0)
             {
                 this.players[0].SetCamera(AutograderManager.LevelInfo.DefaultCameraIndex);
@@ -762,7 +764,6 @@ public class LevelManager : MonoBehaviour
             {
                 this.raceCameras[i].enabled = false;
             }
-
             RaceScreen raceScreen = GameObject.Instantiate(this.raceScreenPrefab).GetComponent<RaceScreen>();
             raceScreen.SetCameras(playerCameraTextures, raceCameraTexture);
             this.screenManager = raceScreen;
@@ -831,6 +832,10 @@ public class LevelManager : MonoBehaviour
         this.pythonInterface.HandleExit();
         ReloadBuffer.BuildIndexToReload = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(ReloadBuffer.BuildIndex, LoadSceneMode.Single);
+        foreach(Racecar player in this.players)
+        {
+            player.Drive.Battery.Reset();
+        }
     }
 
     /// <summary>

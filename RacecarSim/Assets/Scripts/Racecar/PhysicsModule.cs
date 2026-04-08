@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Security;
+using UnityEngine;
 
 /// <summary>
 /// Simulates the IMU.
@@ -121,6 +122,7 @@ public class PhysicsModule : RacecarModule
         if (this.racecar.Hud != null)
         {
             this.racecar.Hud.UpdatePhysics(this.LinearVelocity.magnitude, this.LinearAccceleration, this.AngularVelocity);
+            this.racecar.Hud.UpdateBattery(this.racecar.Drive.Battery.charge);
         }
     }
 

@@ -125,9 +125,10 @@ public class Elevator : MonoBehaviour
 
     private void Start()
     {
-        this.startHeight = this.transform.position.y;
+        this.startHeight = this.platform.transform.position.y;
         this.counter = stopTime;
         this.rbody = platform.GetComponent<Rigidbody>();
+        this.rbody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
 
         if (this.accelerationHeightFraction < 0 || this.accelerationHeightFraction > 0.5f)
         {
@@ -192,8 +193,10 @@ public class Elevator : MonoBehaviour
     private float CalculateSpeed()
     {
         float closerDist = Mathf.Min(this.CurHeight, this.height - this.CurHeight);
-        return Mathf.Lerp(this.speed / 4, this.speed, closerDist / this.accelerationHeightFraction / height);
+        float t = Mathf.Clamp01(closerDist / (this.accelerationHeightFraction * this.height));
+        return Mathf.Lerp(this.speed / 4, this.speed, t);
     }
+
 
     /// <summary>
     /// Attempts to set the color of the light if one was provided.

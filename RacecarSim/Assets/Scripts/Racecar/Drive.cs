@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Diagnostics;
 using UnityEngine;
 
 /// <summary>
@@ -58,6 +60,11 @@ public class Drive : RacecarModule
     public float Speed { get; set; } = 0;
 
     /// <summary>
+    /// The current charge of the car's battery, ranging from 0 to 100. When it reaches 0, the car can no longer move.
+    /// </summary>
+    public Battery Battery { get; set; }
+
+    /// <summary>
     /// The current angle of the car's front wheels, ranging from -1 (full left) to 1 (full right).
     /// </summary>
     public float Angle { get; set; } = 0;
@@ -96,7 +103,7 @@ public class Drive : RacecarModule
     protected override void Awake()
     {
         this.rBody = this.GetComponent<Rigidbody>();
-
+        this.Battery = this.GetComponentInChildren<Battery>();
         base.Awake();
     }
 
@@ -110,6 +117,11 @@ public class Drive : RacecarModule
 
     private void FixedUpdate()
     {
+        if(this.Battery.charge == 0)
+        {
+            this.Stop();
+            return;
+        }
         // Apply resting brake torque if Speed input is 0
         float brakeTorque = this.Speed == 0 ? Mathf.Pow(this.rBody.velocity.magnitude, 2) * Drive.brakeTorqueScale : 0;
         foreach (WheelCollider wheel in this.WheelColliders)
@@ -118,14 +130,34 @@ public class Drive : RacecarModule
         }
 
         // Set torque and angle of wheel colliders
+        
         float torque = this.Speed * this.MaxSpeed * Drive.torqueScale;
+        if(Settings.Battery)
+        {
+            torque *= Battery.charge / 100f * 0.8f + 0.2f; // Scale torque by battery charge
+            Battery.Consume(Mathf.Abs(torque) / Drive.torqueScale * Time.fixedDeltaTime * 2f);
+        }
         this.WheelColliders[(int)WheelPosition.BackLeft].motorTorque = torque;
         this.WheelColliders[(int)WheelPosition.BackRight].motorTorque = torque;
 
         float driveAngle = this.Angle * Drive.maxDriveAngle;
         this.WheelColliders[(int)WheelPosition.FrontLeft].steerAngle = driveAngle;
         this.WheelColliders[(int)WheelPosition.FrontRight].steerAngle = driveAngle;
-
+        
+        if(Settings.Battery)
+        {
+            Battery.Consume(Mathf.Abs(driveAngle - this.WheelColliders[(int)WheelPosition.FrontLeft].steerAngle) / Drive.maxDriveAngle * Time.fixedDeltaTime * 0.5f);
+        }
+        if (Battery.charge == 0)
+        {
+            this.Stop();
+            this.WheelColliders[(int)WheelPosition.BackLeft].motorTorque = 0;
+            this.WheelColliders[(int)WheelPosition.BackRight].motorTorque = 0;
+            this.WheelColliders[(int)WheelPosition.FrontLeft].steerAngle = 0;
+            this.WheelColliders[(int)WheelPosition.FrontRight].steerAngle = 0;
+            LevelManager.HandleFailure(this.racecar.Index, Battery.outOfBatteryMessage);
+            return;
+        }
         // Update position and rotation of wheel models to match wheel colliders
         foreach(WheelPosition wheelPosition in Enum.GetValues(typeof(WheelPosition)))
         {
