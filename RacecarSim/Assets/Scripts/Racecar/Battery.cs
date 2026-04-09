@@ -9,7 +9,7 @@ using UnityEngine;
 public class Battery : MonoBehaviour
 {   
     public float charge = 100f;
-    public const string outOfBatteryMessage = "Your Car's Battery has run out! Please reset the car to continue.";
+    public const string outOfBatteryMessage = "Your car's battery has run out! Please reset the car to continue.";
     public void Consume(float amount)
     {
         charge -= amount;
