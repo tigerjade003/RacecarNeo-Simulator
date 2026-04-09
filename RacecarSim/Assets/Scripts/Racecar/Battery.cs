@@ -17,6 +17,7 @@ public class Battery : MonoBehaviour
         {
             charge = 0;
         }
+        // UnityEngine.Debug.Log($"Battery charge: {charge}%");
     }
     public void Reset()
     {

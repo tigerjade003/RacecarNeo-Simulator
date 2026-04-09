@@ -150,4 +150,18 @@ public class RaceScreen : ScreenManager
         }
         return this.cameraViews[carIndex];
     }
+
+    public override void UpdateTime(float mainTime, float[] keyPointDurations)
+    {
+        base.UpdateTime(mainTime, keyPointDurations);
+
+        if (Settings.Battery)
+        {
+            for (int i = 0; i < this.numCars; i++)
+            {
+                Battery battery = LevelManager.GetCar(i).Drive.Battery;
+                this.GetCameraView(i).Text.text = "Battery: " + battery.charge.ToString("F1") + "%";
+            }
+        }
+    }
 }
