@@ -117,6 +117,7 @@ public class Drive : RacecarModule
 
     private void FixedUpdate()
     {
+        // Stop the car if the battery is dead.
         if(this.Battery.charge == 0)
         {
             this.Stop();
@@ -143,7 +144,7 @@ public class Drive : RacecarModule
         float driveAngle = this.Angle * Drive.maxDriveAngle;
         this.WheelColliders[(int)WheelPosition.FrontLeft].steerAngle = driveAngle;
         this.WheelColliders[(int)WheelPosition.FrontRight].steerAngle = driveAngle;
-        
+        // if the Battery setting is on, consume battery charge based on how much the user is turning the wheels, and stop the car if the battery is dead
         if(Settings.Battery)
         {
             Battery.Consume(Mathf.Abs(driveAngle - this.WheelColliders[(int)WheelPosition.FrontLeft].steerAngle) / Drive.maxDriveAngle * Time.fixedDeltaTime * 0.5f);
