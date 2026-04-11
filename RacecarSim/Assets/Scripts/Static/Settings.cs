@@ -29,6 +29,11 @@ public static class Settings
     private const bool defaultBattery = false;
 
     /// <summary>
+    /// The default value of Delay.
+    /// </summary>
+    private const bool defaultDelay = false;
+
+    /// <summary>
     /// The default fixed delta time (in seconds) chosen by Unity.
     /// </summary>
     public static readonly float DefaultFixedDeltaTime = Time.fixedDeltaTime;
@@ -67,6 +72,8 @@ public static class Settings
 
     public static bool Battery;
 
+    public static bool Delay;
+
     /// <summary>
     /// If true, controller input is still sent in evaluation mode but best times are not recorded.
     /// </summary>
@@ -103,6 +110,7 @@ public static class Settings
         Settings.DepthRes = Settings.defaultDepthRes;
         Settings.Username = Settings.DefaultUsername;
         Settings.Battery = Settings.defaultBattery;
+        Settings.Delay = Settings.defaultDelay;
     }
 
     /// <summary>
@@ -113,6 +121,7 @@ public static class Settings
         PlayerPrefs.SetInt("IsRealism", System.Convert.ToInt32(Settings.IsRealism));
         PlayerPrefs.SetInt("HideCarsInColorCamera", System.Convert.ToInt32(Settings.HideCarsInColorCamera));
         PlayerPrefs.SetInt("Battery", System.Convert.ToInt32(Settings.Battery));
+        PlayerPrefs.SetInt("Delay,", System.Convert.ToInt32(Settings.Delay));
         PlayerPrefs.SetInt("DepthRes", (int)Settings.DepthRes);
         PlayerPrefs.SetString("Username", Settings.Username);
     }
@@ -133,5 +142,6 @@ public static class Settings
         Settings.DepthRes = (DepthResolution)PlayerPrefs.GetInt("DepthRes", (int)Settings.defaultDepthRes);
         Settings.Username = PlayerPrefs.GetString("Username", Settings.DefaultUsername);
         Settings.Battery = System.Convert.ToBoolean(PlayerPrefs.GetInt("Battery", System.Convert.ToInt32(Settings.defaultBattery)));
+        Settings.Delay = System.Convert.ToBoolean(PlayerPrefs.GetInt("Delay", System.Convert.ToInt32(Settings.defaultDelay)));
     }
 }
